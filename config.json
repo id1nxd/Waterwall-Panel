@@ -1,0 +1,85 @@
+{
+    "name": "direct_trojan",
+    "nodes": [
+        {
+            "name": "my-tcp-listener",
+            "type": "TcpListener",
+            "settings": {
+                "address": "0.0.0.0",
+                "port": 443,
+                "nodelay": true
+            },
+            "next": "my-ssl-server"
+        },
+        {
+            "name": "my-ssl-server",
+            "type": "OpenSSLServer",
+            "settings": {
+                "anti-tls-in-tls": true,
+                "cert-file": "fullchain.pem",
+                "key-file": "privkey.pem",
+                "alpns": [
+                    {
+                        "value": "h2",
+                        "next": "node->next"
+                    },
+                    {
+                        "value": "http/1.1",
+                        "next": "node->next"
+                    }
+                ],
+                "fallback": "my-tls-fallback"
+            },
+            "next": "my-trojan-auth"
+        },
+        {
+            "name": "my-trojan-auth",
+            "type": "TrojanAuthServer",
+            "settings": {
+                "fallback": "my-trojan-fallback",
+                "fallback-intence-delay": 200,
+                "users": [
+                    {
+                        "name": "sample_user",
+                        "uid": "1234",
+                        "enable": true
+                    }
+                ]
+            },
+            "next": "my-trojan-socks"
+        },
+        {
+            "name": "my-trojan-socks",
+            "type": "TrojanSocksServer",
+            "settings": {},
+            "next": "my-connector"
+        },
+        {
+            "name": "my-connector",
+            "type": "Connector",
+            "settings": {
+                "nodelay": true,
+                "address": "dest_context->address",
+                "port": "dest_context->port"
+            }
+        },
+        {
+            "name": "my-tls-fallback",
+            "type": "TcpConnector",
+            "settings": {
+                "nodelay": true,
+                "address": "demo.nginx.com",
+                "port": 443
+            }
+        },
+        {
+            "name": "my-trojan-fallback",
+            "type": "TcpConnector",
+            "settings": {
+                "nodelay": true,
+                "address": "httpforever.com",
+                "port": 80
+            }
+        }
+    ]
+}
