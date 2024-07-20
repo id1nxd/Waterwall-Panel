@@ -3,6 +3,8 @@ import datetime
 import uuid
 import os
 import json
+from datetime import date
+
 
 def showuser():
     connection_obj = sqlite3.connect('WP.db') 
@@ -125,7 +127,10 @@ def renewuser():
     x = datetime.datetime.now()
 
     id = int(input("Enter UserID to ReNew:"))
-    day=int(input("Enter Day to renew:"))
+    day=int(input("Enter Day to Exp:"))
+    mon=int(input("Enter month to Exp:"))
+    year=int(input("Enter year to Exp:"))
+
     uid=""
 
     connection_obj = sqlite3.connect('WP.db') 
@@ -147,18 +152,15 @@ def renewuser():
 
     change_user_status(uid,"true")
 
-    mon=0
 
-    if(day>30 and day<365):
-        mon=int(day/30)
-        day=day%30
-    elif(day ==0):
+    if(day>32 or mon>12):
         return 0
-    elif(day>365):
+    elif(day ==0 or mon==0):
         return 0
-
+    
+    
     connection_obj = sqlite3.connect('WP.db')
-    txttmp=str(x.day+day)+"-"+str(x.month+mon)+"-"+str(x.year)
+    txttmp=str(day)+"-"+str(mon)+"-"+str(year)
 
     txtsql="UPDATE Users SET UserExp='"+txttmp+"', UserStatus='true' WHERE UserID="+str(id)+";"
     connection_obj.execute(txtsql)
