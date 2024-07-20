@@ -66,20 +66,19 @@ def addusertoconfig(username, uid):
 def adduser():
     x = datetime.datetime.now()
     remark = input("Enter email/name/remark for user:")
-    Exp = int(input("Enter Days:"))
+    day=int(input("Enter Day to Exp:"))
+    mon=int(input("Enter month to Exp:"))
+    year=int(input("Enter year to Exp:"))    
     uuid1 = uuid.uuid4()
 
-    day=Exp
-    mon=0
 
-    if(Exp>30):
-        mon=int(Exp/30)
-        day=Exp%30
-    elif(Exp ==0):
+    if(day>32 or mon>12):
+        return 0
+    elif(day ==0 or mon==0):
         return 0
 
     
-    txtExp=str(int(x.day)+day)+"-"+str(int(x.month)+mon)+"-"+str(x.year)
+    txtExp=str(day)+"-"+str(mon)+"-"+str(year)
 
     addusertoconfig(remark,str(uuid1))
 
