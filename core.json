@@ -1,0 +1,27 @@
+{
+  "log": {
+    "path": "log/",
+    "core": {
+      "loglevel": "DEBUG",
+      "file": "core.log",
+      "console": true
+    },
+    "network": {
+      "loglevel": "DEBUG",
+      "file": "network.log",
+      "console": true
+    },
+    "dns": {
+      "loglevel": "SILENT",
+      "file": "dns.log",
+      "console": false
+    }
+  },
+  "dns": {},
+  "misc": {
+    "workers": 0,
+    "ram-profile": "server",
+    "libs-path": "libs/"
+  },
+  "configs": ["config.json"]
+}
